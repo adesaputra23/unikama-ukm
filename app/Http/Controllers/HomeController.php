@@ -19,6 +19,8 @@ class HomeController extends Controller
         // $this->middleware('auth');
     }
 
+    // new kommit
+
     /**
      * Show the application dashboard.
      *
