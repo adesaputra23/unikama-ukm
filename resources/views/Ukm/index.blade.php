@@ -58,7 +58,7 @@
                     </div>
                     <div class="card-block table-border-style">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered" id="example">
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
