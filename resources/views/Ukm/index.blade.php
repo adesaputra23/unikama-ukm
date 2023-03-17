@@ -78,7 +78,7 @@
                                             <td class="align-middle">{{$value->nama_ukm}}</td>
                                             <td class="align-middle text-center">
                                                  <img style="width: 5rem;" 
-                                                    src="{{(!empty($value->foto_ukm)) ? asset('file_foto_ukm').'/'.$value->foto_ukm : asset('assets/images/avatar-0.png')}}" 
+                                                    src="{{(!empty($value->foto_ukm)) ? asset('file_foto_ukm').'/'.$value->foto_ukm : asset('assets/images/ukm-default.jpg')}}" 
                                                 class="rounded" alt="...">
                                             </td>
                                             @if (User::Is_Admin() || User::Is_Kepala_BAK())

@@ -59,7 +59,7 @@
                     </div>
                     <div class="card-block table-border-style">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered" id="example">
+                            <table class="table table-hover table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
@@ -79,7 +79,7 @@
                                             <td class="align-middle"><?php echo e($value->nama_ukm); ?></td>
                                             <td class="align-middle text-center">
                                                  <img style="width: 5rem;" 
-                                                    src="<?php echo e((!empty($value->foto_ukm)) ? asset('file_foto_ukm').'/'.$value->foto_ukm : asset('assets/images/avatar-0.png')); ?>" 
+                                                    src="<?php echo e((!empty($value->foto_ukm)) ? asset('file_foto_ukm').'/'.$value->foto_ukm : asset('assets/images/ukm-default.jpg')); ?>" 
                                                 class="rounded" alt="...">
                                             </td>
                                             <?php if(User::Is_Admin() || User::Is_Kepala_BAK()): ?>
@@ -220,6 +220,7 @@ unset($__errorArgs, $__bag); ?>
 
 <?php $__env->startSection('costum-js'); ?>
     <script>
+
         $(document).on('click', '#btn-tambah' ,function(e){
             $('.modal .modal-title').text('Tambah Data UKM');
             $('#kode_ukm').attr('readonly', false);
