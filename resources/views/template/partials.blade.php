@@ -85,6 +85,10 @@
     <script type="text/javascript" src="{{asset('assets/js/jquery-ui/jquery-ui.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('assets/js/popper.js/popper.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('assets/js/bootstrap/js/bootstrap.min.js')}}"></script>
+
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js "></script>
+
     <!-- jquery slimscroll js -->
     <script type="text/javascript" src="{{asset('assets/js/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
     <!-- modernizr js -->
