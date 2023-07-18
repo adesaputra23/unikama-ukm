@@ -178,7 +178,7 @@
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Tanggal Terbentuk</label>
                 <div class="col-sm-9">
-                    <input value="" type="date" class="form-control" name="tgl_terbentuk" id="tgl_terbentuk" required>
+                    <input value="" type="date" class="form-control" name="tgl_terbentuk" id="tgl_terbentuk">
                 </div>
             </div>
             <div class="form-group row">
