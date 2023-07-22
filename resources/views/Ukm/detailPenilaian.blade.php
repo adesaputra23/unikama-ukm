@@ -2,6 +2,7 @@
 @php
     use App\User;
     use App\Ukm;
+    use App\Kriteria;
 @endphp
 {{-- section content-breadcrumb --}}
 @section('content-breadcrumb')
@@ -29,21 +30,59 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered">
                                 <thead>
+                                    {{-- row kriteria label --}}
+                                    <tr style="background-color: rgba(231, 220, 220, 0.782)">
+                                        <th class="text-center" colspan="{{$kriteria_count + 2}}">Penilaian </th>
+                                    </tr>
                                     <tr>
                                         <th class="text-center align-middle" rowspan="2">Kode UKM</th>
                                         <th class="text-center align-middle" rowspan="2">Nama UKM</th>
                                         <th class="text-center align-middle" colspan="{{$kriteria_count}}">Kriteria</th>
                                     </tr>
                                     @foreach ($list_kriteria as $key => $kriteria)
-                                        <th class="text-center">
-                                            {{$kriteria->kode_kriteria}} 
-                                            {{"($kriteria->jenis_kriteria)"}}
+                                        <td class="text-center">
+                                            <b>{{$kriteria->nama_kriteria}}</b>
+                                            <br>
+                                            <i>{{"($kriteria->jenis_kriteria)"}}</i>
                                             <br>
                                             <small style="font-size: 14px;"><b>{{$kriteria->nilai}}</b></small>
-                                        </th>
+                                        </td>
                                     @endforeach
                                 </thead>
                                 <tbody>
+
+                                    {{-- kriteria --}}
+                                    @foreach ($list_penilaian as $penilaian => $val)
+                                        <tr>
+                                            <td>{{$val[0]->ukm->kode_ukm}}</td>
+                                            <td>{{$val[0]->ukm->nama_ukm}}</td>
+                                            @foreach ($list_kriteria as $key => $kriteria)
+                                                <td class="text-center">
+                                                    @if ($kriteria->jenis_kriteria ===  'Benefit')
+                                                            @if ($val[$key]->nilai == 0)
+                                                                <i style="color: red;">{{Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']}}</i>
+                                                            @else       
+                                                                <b>{{Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']}}</b>
+                                                            @endif
+                                                        @else
+                                                            @if ($val[$key]->nilai == 0)
+                                                                <i style="color: red;">{{Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']}}</i>
+                                                            @else
+                                                                <b>{{Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']}}</b>
+                                                            @endif
+                                                        @endif
+                                                    {{-- {{$val[$key]->nilai}} --}}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                    @endforeach
+
+                                    {{-- row kriteria label --}}
+                                    <tr style="background-color: rgba(231, 220, 220, 0.782)">
+                                        <th class="text-center" colspan="{{$kriteria_count + 2}}">Nilai</th>
+                                    </tr>
+
+                                    {{-- Nilai --}}
                                     @foreach ($list_penilaian as $penilaian => $val)
                                         <tr>
                                             <td>{{$val[0]->ukm->kode_ukm}}</td>

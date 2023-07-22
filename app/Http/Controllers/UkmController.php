@@ -94,8 +94,10 @@ class UkmController extends Controller
         $list_penilaian = Penilaian::with('ukm', 'kriteria')->where('npm', Auth::user()->user_name)->get()->groupBy('kode_ukm');
         $list_ukm = Ukm::all();
         $list_kriteria = Kriteria::all();
+        $nilaiTingkatKepentingan = Kriteria::TINGKAT_KEPENTINGAN;
+        $nilaiStandarKriteria = Kriteria::STANDAR_KRITERIA;
         $kriteria_count = Kriteria::select('kode_kriteria')->count();
-        return view('ukm.penilaian_ukm', compact('list_ukm', 'list_kriteria', 'kriteria_count', 'list_penilaian'));
+        return view('ukm.penilaian_ukm', compact('list_ukm', 'list_kriteria', 'kriteria_count', 'list_penilaian', 'nilaiTingkatKepentingan', 'nilaiStandarKriteria'));
     }
 
     public function PenilaianUbah()
@@ -103,8 +105,10 @@ class UkmController extends Controller
         $list_penilaian = Penilaian::with('ukm', 'kriteria')->where('npm', Auth::user()->user_name)->get()->groupBy('kode_ukm');
         $list_ukm = Ukm::all();
         $list_kriteria = Kriteria::all();
+        $nilaiTingkatKepentingan = Kriteria::TINGKAT_KEPENTINGAN;
+        $nilaiStandarKriteria = Kriteria::STANDAR_KRITERIA;
         $kriteria_count = Kriteria::select('kode_kriteria')->count();
-        return view('ukm.ubah_penilaian_ukm', compact('list_ukm', 'list_kriteria', 'kriteria_count', 'list_penilaian'));
+        return view('ukm.ubah_penilaian_ukm', compact('list_ukm', 'list_kriteria', 'kriteria_count', 'list_penilaian', 'nilaiTingkatKepentingan', 'nilaiStandarKriteria'));
     }
 
     public function PenilaianSave(Request $request)
@@ -180,9 +184,10 @@ class UkmController extends Controller
                 $array_nilai[$item]['kode_ukm'] = $values[$key]->ukm->kode_ukm;
                 $array_nilai[$item]['nama_ukm'] = $values[$key]->ukm->nama_ukm;
                 if ($values[$key]->kriteria->jenis_kriteria == 'Benefit') {
-                    $array_nilai[$item]['nilai'][] = $values[$key]->nilai / Penilaian::where('npm', $npm)->where('kode_kriteria', $values[$key]->kriteria->kode_kriteria)->max('nilai');
+                    $array_nilai[$item]['nilai'][] = @($values[$key]->nilai / Penilaian::where('npm', $npm)->where('kode_kriteria', $values[$key]->kriteria->kode_kriteria)->max('nilai'));
                 } else {
-                    $array_nilai[$item]['nilai'][] = Penilaian::where('npm', $npm)->where('kode_kriteria', $values[$key]->kriteria->kode_kriteria)->min('nilai') / $values[$key]->nilai;
+                    $nilaiCost = @(Penilaian::where('npm', $npm)->where('kode_kriteria', $values[$key]->kriteria->kode_kriteria)->min('nilai') / $values[$key]->nilai);
+                    $array_nilai[$item]['nilai'][] = is_nan($nilaiCost) ? 0 : $nilaiCost;
                 }
             }
         }

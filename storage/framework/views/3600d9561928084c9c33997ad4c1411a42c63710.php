@@ -1,5 +1,6 @@
 <?php
     use App\User;
+    use App\Kriteria;
 ?>
 
 <?php $__env->startSection('content-breadcrumb'); ?>
@@ -54,11 +55,15 @@
                                             <tr>
                                                 <th class="text-center align-middle" rowspan="2">Kode UKM</th>
                                                 <th class="text-center align-middle" rowspan="2">Nama UKM</th>
-                                                <th class="text-center align-middle" colspan="<?php echo e($kriteria_count); ?>">Kriteria</th>
+                                                <th class="text-center align-middle" colspan="<?php echo e($kriteria_count); ?>">Kriteria Penilaian</th>
                                             </tr>
                                             <tr>
                                                 <?php $__currentLoopData = $list_kriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $kriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <th class="text-center"><?php echo e($kriteria->kode_kriteria); ?> <?php echo e("($kriteria->jenis_kriteria)"); ?></th>
+                                                    <td class="text-center">
+                                                        <b><?php echo e($kriteria->nama_kriteria); ?></b>
+                                                        <br>
+                                                        <i><?php echo e("($kriteria->jenis_kriteria)"); ?></i>
+                                                    </td>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </tr>
                                         </thead>
@@ -69,9 +74,24 @@
                                                     <td><?php echo e($ukm->nama_ukm); ?></td>
                                                     <?php $__currentLoopData = $list_kriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $kriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <td>
+                                                            <?php if($kriteria->jenis_kriteria ===  'Benefit'): ?>
+                                                                <select class="custom-select form-control" id="nilai" name="nilai[]">
+                                                                    <option value="0" selected>Pilih Nilai</option>
+                                                                    <?php $__currentLoopData = $nilaiTingkatKepentingan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keyTk => $tingkatKepentingan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                        <option value="<?php echo e($tingkatKepentingan['nilai_kpt']); ?>"><?php echo e($tingkatKepentingan['nama_kpt']); ?></option>
+                                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                </select>
+                                                            <?php else: ?>
+                                                                <select class="custom-select form-control" id="nilai" name="nilai[]">
+                                                                    <option value="0" selected>Pilih Nilai</option>
+                                                                    <?php $__currentLoopData = $nilaiStandarKriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keyTk => $standarKriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                        <option value="<?php echo e($standarKriteria['nilai_krt']); ?>"><?php echo e($standarKriteria['nama_krt']); ?></option>
+                                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                </select>
+                                                            <?php endif; ?>
                                                             <input value="<?php echo e($ukm->kode_ukm); ?>" type="hidden" class="form-control" name="kode_ukm[]">
                                                             <input value="<?php echo e($kriteria->kode_kriteria); ?>" type="hidden" class="form-control" name="kode_kriteria[]">
-                                                            <input max="5" min="1" value="" type="number" class="form-control" name="nilai[]" id="nilai" required>
+                                                            
                                                         </td>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </tr>
@@ -95,17 +115,20 @@
                                     <button type="button" class="btn btn-grd-danger btn-sm" data-toggle="modal" data-target=".bd-example-modal-hapus">Hapus</button>
                                     <a href="<?php echo e(route('ukm.penilaian.detail')); ?>" class="btn btn-grd-info btn-sm">Detail</a>
                                 </div>
-                                <br><br>
-                                <table class="table table-hover table-bordered" id="example">
+                                <table class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
                                             <th class="text-center align-middle" rowspan="2">Kode UKM</th>
                                             <th class="text-center align-middle" rowspan="2">Nama UKM</th>
-                                            <th class="text-center align-middle" colspan="<?php echo e($kriteria_count); ?>">Kriteria</th>
+                                            <th class="text-center align-middle" colspan="<?php echo e($kriteria_count); ?>">Kriteria Penilaian</th>
                                         </tr>
                                         <tr>
                                             <?php $__currentLoopData = $list_kriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $kriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <th class="text-center"><?php echo e($kriteria->kode_kriteria); ?> <?php echo e("($kriteria->jenis_kriteria)"); ?></th>
+                                                <td class="text-center">
+                                                    <b><?php echo e($kriteria->nama_kriteria); ?></b>
+                                                    <br>
+                                                    <i><?php echo e("($kriteria->jenis_kriteria)"); ?></i>
+                                                </td>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </tr>
                                     </thead>
@@ -116,8 +139,20 @@
                                                 <td><?php echo e($val[0]->ukm->nama_ukm); ?></td>
                                                 <?php $__currentLoopData = $list_kriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $kriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <td class="text-center">
-                                                        <?php echo e($val[$key]->nilai); ?>
-
+                                                        <?php if($kriteria->jenis_kriteria ===  'Benefit'): ?>
+                                                            <?php if($val[$key]->nilai == 0): ?>
+                                                                <i style="color: red;"><?php echo e(Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']); ?></i>
+                                                            <?php else: ?>       
+                                                                <b><?php echo e(Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']); ?></b>
+                                                            <?php endif; ?>
+                                                        <?php else: ?>
+                                                            <?php if($val[$key]->nilai == 0): ?>
+                                                                <i style="color: red;"><?php echo e(Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']); ?></i>
+                                                            <?php else: ?>
+                                                                <b><?php echo e(Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']); ?></b>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                        
                                                     </td>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </tr>

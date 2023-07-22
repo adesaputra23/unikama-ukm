@@ -1,6 +1,7 @@
 <?php
     use App\User;
     use App\Ukm;
+    use App\Kriteria;
 ?>
 
 <?php $__env->startSection('content-breadcrumb'); ?>
@@ -28,22 +29,59 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered">
                                 <thead>
+                                    
+                                    <tr style="background-color: rgba(231, 220, 220, 0.782)">
+                                        <th class="text-center" colspan="<?php echo e($kriteria_count + 2); ?>">Penilaian </th>
+                                    </tr>
                                     <tr>
                                         <th class="text-center align-middle" rowspan="2">Kode UKM</th>
                                         <th class="text-center align-middle" rowspan="2">Nama UKM</th>
                                         <th class="text-center align-middle" colspan="<?php echo e($kriteria_count); ?>">Kriteria</th>
                                     </tr>
                                     <?php $__currentLoopData = $list_kriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $kriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <th class="text-center">
-                                            <?php echo e($kriteria->kode_kriteria); ?> 
-                                            <?php echo e("($kriteria->jenis_kriteria)"); ?>
-
+                                        <td class="text-center">
+                                            <b><?php echo e($kriteria->nama_kriteria); ?></b>
+                                            <br>
+                                            <i><?php echo e("($kriteria->jenis_kriteria)"); ?></i>
                                             <br>
                                             <small style="font-size: 14px;"><b><?php echo e($kriteria->nilai); ?></b></small>
-                                        </th>
+                                        </td>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </thead>
                                 <tbody>
+
+                                    
+                                    <?php $__currentLoopData = $list_penilaian; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $penilaian => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <tr>
+                                            <td><?php echo e($val[0]->ukm->kode_ukm); ?></td>
+                                            <td><?php echo e($val[0]->ukm->nama_ukm); ?></td>
+                                            <?php $__currentLoopData = $list_kriteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $kriteria): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <td class="text-center">
+                                                    <?php if($kriteria->jenis_kriteria ===  'Benefit'): ?>
+                                                            <?php if($val[$key]->nilai == 0): ?>
+                                                                <i style="color: red;"><?php echo e(Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']); ?></i>
+                                                            <?php else: ?>       
+                                                                <b><?php echo e(Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']); ?></b>
+                                                            <?php endif; ?>
+                                                        <?php else: ?>
+                                                            <?php if($val[$key]->nilai == 0): ?>
+                                                                <i style="color: red;"><?php echo e(Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']); ?></i>
+                                                            <?php else: ?>
+                                                                <b><?php echo e(Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']); ?></b>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                    
+                                                </td>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </tr>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                    
+                                    <tr style="background-color: rgba(231, 220, 220, 0.782)">
+                                        <th class="text-center" colspan="<?php echo e($kriteria_count + 2); ?>">Nilai</th>
+                                    </tr>
+
+                                    
                                     <?php $__currentLoopData = $list_penilaian; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $penilaian => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             <td><?php echo e($val[0]->ukm->kode_ukm); ?></td>

@@ -1,6 +1,7 @@
 @extends('template.partials')
 @php
     use App\User;
+    use App\Kriteria;
 @endphp
 {{-- section content-breadcrumb --}}
 @section('content-breadcrumb')
@@ -53,11 +54,15 @@
                                             <tr>
                                                 <th class="text-center align-middle" rowspan="2">Kode UKM</th>
                                                 <th class="text-center align-middle" rowspan="2">Nama UKM</th>
-                                                <th class="text-center align-middle" colspan="{{$kriteria_count}}">Kriteria</th>
+                                                <th class="text-center align-middle" colspan="{{$kriteria_count}}">Kriteria Penilaian</th>
                                             </tr>
                                             <tr>
                                                 @foreach ($list_kriteria as $key => $kriteria)
-                                                    <th class="text-center">{{$kriteria->kode_kriteria}} {{"($kriteria->jenis_kriteria)"}}</th>
+                                                    <td class="text-center">
+                                                        <b>{{$kriteria->nama_kriteria}}</b>
+                                                        <br>
+                                                        <i>{{"($kriteria->jenis_kriteria)"}}</i>
+                                                    </td>
                                                 @endforeach
                                             </tr>
                                         </thead>
@@ -68,9 +73,24 @@
                                                     <td>{{$ukm->nama_ukm}}</td>
                                                     @foreach ($list_kriteria as $key => $kriteria)
                                                         <td>
+                                                            @if ($kriteria->jenis_kriteria ===  'Benefit')
+                                                                <select class="custom-select form-control" id="nilai" name="nilai[]">
+                                                                    <option value="0" selected>Pilih Nilai</option>
+                                                                    @foreach ($nilaiTingkatKepentingan as $keyTk => $tingkatKepentingan)
+                                                                        <option value="{{$tingkatKepentingan['nilai_kpt']}}">{{$tingkatKepentingan['nama_kpt']}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                <select class="custom-select form-control" id="nilai" name="nilai[]">
+                                                                    <option value="0" selected>Pilih Nilai</option>
+                                                                    @foreach ($nilaiStandarKriteria as $keyTk => $standarKriteria)
+                                                                        <option value="{{$standarKriteria['nilai_krt']}}">{{$standarKriteria['nama_krt']}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @endif
                                                             <input value="{{$ukm->kode_ukm}}" type="hidden" class="form-control" name="kode_ukm[]">
                                                             <input value="{{$kriteria->kode_kriteria}}" type="hidden" class="form-control" name="kode_kriteria[]">
-                                                            <input max="5" min="1" value="" type="number" class="form-control" name="nilai[]" id="nilai" required>
+                                                            {{-- <input max="5" min="1" value="" type="number" class="form-control" name="nilai[]" id="nilai" required> --}}
                                                         </td>
                                                     @endforeach
                                                 </tr>
@@ -99,11 +119,15 @@
                                         <tr>
                                             <th class="text-center align-middle" rowspan="2">Kode UKM</th>
                                             <th class="text-center align-middle" rowspan="2">Nama UKM</th>
-                                            <th class="text-center align-middle" colspan="{{$kriteria_count}}">Kriteria</th>
+                                            <th class="text-center align-middle" colspan="{{$kriteria_count}}">Kriteria Penilaian</th>
                                         </tr>
                                         <tr>
                                             @foreach ($list_kriteria as $key => $kriteria)
-                                                <th class="text-center">{{$kriteria->kode_kriteria}} {{"($kriteria->jenis_kriteria)"}}</th>
+                                                <td class="text-center">
+                                                    <b>{{$kriteria->nama_kriteria}}</b>
+                                                    <br>
+                                                    <i>{{"($kriteria->jenis_kriteria)"}}</i>
+                                                </td>
                                             @endforeach
                                         </tr>
                                     </thead>
@@ -114,7 +138,20 @@
                                                 <td>{{$val[0]->ukm->nama_ukm}}</td>
                                                 @foreach ($list_kriteria as $key => $kriteria)
                                                     <td class="text-center">
-                                                        {{$val[$key]->nilai}}
+                                                        @if ($kriteria->jenis_kriteria ===  'Benefit')
+                                                            @if ($val[$key]->nilai == 0)
+                                                                <i style="color: red;">{{Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']}}</i>
+                                                            @else       
+                                                                <b>{{Kriteria::MAP_NILAI_TINGKAT_KEPENTINGAN[$val[$key]->nilai]['nama_kpt']}}</b>
+                                                            @endif
+                                                        @else
+                                                            @if ($val[$key]->nilai == 0)
+                                                                <i style="color: red;">{{Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']}}</i>
+                                                            @else
+                                                                <b>{{Kriteria::MAP_STANDAR_KRITERIA[$val[$key]->nilai]['nama_krt']}}</b>
+                                                            @endif
+                                                        @endif
+                                                        {{-- {{$val[$key]->nilai}} --}}
                                                     </td>
                                                 @endforeach
                                             </tr>
